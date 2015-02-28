@@ -6,6 +6,18 @@ Posts = new Meteor.Collection("posts");
 //     }
 // })
 
+Posts.allow({
+  update: function(userId, post) { return ownsDocument(userId, post); },
+  remove: function(userId, post) { return ownsDocument(userId, post); }
+});
+
+Posts.deny({
+  update: function(userId, post, fieldNames) {
+    // may only edit the following two field:
+    return (_.without(fieldNames, 'url', 'title').length > 0)
+  }
+})
+
 Meteor.methods({
   postInsert: function(postAttributes) {
     check(Meteor.world);
@@ -42,5 +54,14 @@ Meteor.methods({
     return {
       _id: postId
     };
-  }
-})
+  },
+  // postGet: function(postAttributes) {
+  //   var postWithSomeLink = Posts.findOne({url: postAttributes.url})
+
+  //   if (postWithSomeLink) {
+  //     return postWithSomeLink
+  //   } else {
+  //     return {}
+  //   }
+  // }
+});
