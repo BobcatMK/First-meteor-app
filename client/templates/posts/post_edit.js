@@ -16,7 +16,7 @@ Template.postEdit.events({
         if (test.length != 0) {
             for (var i = 0;i <= test.length;i++) {
                 if (test[0]._id !== currentPostId) {
-                    alert("Post with such url already exists");
+                    throwError("Post with such url already exists");
                     // return Router.go('postPage', { _id: currentPostId});
                     return
                 }
@@ -30,7 +30,7 @@ Template.postEdit.events({
         }, function(error) {
             if (error) {
                 // display the error to the user
-                alert(error.reason);
+                throwError(error.reason);
             } else {
                 Router.go('postPage', {
                     _id: currentPostId

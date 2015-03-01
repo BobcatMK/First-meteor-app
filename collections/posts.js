@@ -34,6 +34,10 @@ Meteor.methods({
       postAttributes.title += "(client)";
     }
 
+    var errors = validatePost(postAttributes);
+    if (errors.title || errors.url)
+      throw new Meteor.Error("invalid-post","you must set a title and URL for your post")
+
     var postWithSameLink = Posts.findOne({url: postAttributes.url});
     if (postWithSameLink) {
       return {
@@ -54,14 +58,17 @@ Meteor.methods({
     return {
       _id: postId
     };
-  },
-  // postGet: function(postAttributes) {
-  //   var postWithSomeLink = Posts.findOne({url: postAttributes.url})
-
-  //   if (postWithSomeLink) {
-  //     return postWithSomeLink
-  //   } else {
-  //     return {}
-  //   }
-  // }
+  }
 });
+
+validatePost = function(post) {
+  var errors = {};
+
+  if (!post.title)
+    errors.title = "Please fill in a headline";
+
+  if (!post.url)
+    errors.url = "Please fill in a URL";
+
+  return errors;
+}
