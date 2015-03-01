@@ -15,8 +15,13 @@ Posts.deny({
   update: function(userId, post, fieldNames) {
     // may only edit the following two field:
     return (_.without(fieldNames, 'url', 'title').length > 0)
+  },
+  update: function(userId, post, fieldNames, modifier) {
+    var errors = validatePost(modifier.$set);
+    console.log(modifier);
+    return errors.title || errors.url;
   }
-})
+});
 
 Meteor.methods({
   postInsert: function(postAttributes) {
